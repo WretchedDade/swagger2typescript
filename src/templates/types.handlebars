@@ -1,0 +1,11 @@
+{{#StripSingleQuotes}}
+export namespace {{name}} {
+
+{{#each types}}
+export interface {{name}} {{{properties}}}
+
+{{/each}}
+}
+
+export default {{name}}
+{{/StripSingleQuotes}}

@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"importHelpers": true,
+		"module": "commonjs",
+		"outDir": "lib",
+		"rootDir": "src",
+		"target": "ES2018",
+		"esModuleInterop": true,
+		"lib": ["ES2018", "ESNext"]
+	},
+	"include": ["src/**/*"]
+}

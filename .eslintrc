@@ -1,0 +1,12 @@
+{
+	"extends": ["oclif", "oclif-typescript"],
+
+	"rules": {
+		"new-cap": "off",
+		"indent": ["error", "tab"],
+		"semi": "off",
+		"object-curly-spacing": ["error", "always"],
+		"unicorn/filename-case": "off",
+		"unicorn/no-abusive-eslint-disable": "off"
+	}
+}
