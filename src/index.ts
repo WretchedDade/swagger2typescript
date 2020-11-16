@@ -15,7 +15,6 @@ import {
 	MustacheRender,
 	Options,
 	ParsedOpenApi,
-	TemplateOptions,
 } from './Models';
 
 const defaultOptions: DefaultOptions = {
@@ -87,7 +86,7 @@ export function GenerateTypescriptCodeFromSwagger(options: Options): FileGenerat
 function GenerateModelsFile(api: ParsedOpenApi, defaultedOptions: DefaultedOptions): FileGenerationOutput {
 	const { outputDirectory, modelsFileName, modelsFilter, prettierConfig } = defaultedOptions;
 
-	const template = FileSystem.readFileSync(Path.resolve(__dirname, './templates/Models.mustache')).toString();
+	const template = FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Models.mustache')).toString();
 
 	const output = Mustache.render(
 		template,
@@ -116,7 +115,7 @@ function GenerateClassFile(fileName: string, options: FileGenerationOptions): Fi
 
 	const template =
 		options.templateOption.template ??
-		FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
+		FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Class.mustache')).toString();
 
 	const output = Mustache.render(template, AddHelpers(options.api, options, { name: fileName }));
 
@@ -139,7 +138,7 @@ function GenerateMethodFile(method: Method, options: FileGenerationOptions): Fil
 
 	const template =
 		options.templateOption.template ??
-		FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
+		FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Class.mustache')).toString();
 
 	const output = Mustache.render(template, AddHelpers(method, options));
 
