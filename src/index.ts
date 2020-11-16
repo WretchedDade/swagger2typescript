@@ -114,7 +114,9 @@ function GenerateClassFile(fileName: string, options: FileGenerationOptions): Fi
 
 	const { outputDirectory, prettierConfig } = options.defaultedOptions;
 
-	const template = FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
+	const template =
+		options.templateOption.template ??
+		FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
 
 	const output = Mustache.render(template, AddHelpers(options.api, options, { name: fileName }));
 
@@ -135,7 +137,9 @@ function GenerateMethodFile(method: Method, options: FileGenerationOptions): Fil
 
 	const { outputDirectory, prettierConfig } = options.defaultedOptions;
 
-	const template = FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
+	const template =
+		options.templateOption.template ??
+		FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
 
 	const output = Mustache.render(template, AddHelpers(method, options));
 
