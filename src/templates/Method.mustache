@@ -1,0 +1,32 @@
+import Axios, { AxiosRequestConfig } from 'axios';
+
+export default async function {{name}}({{#hasParameters}}request: {{name}}Request, {{/hasParameters}}baseUrl: string, config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+
+    let path = '{{&fullPath}}';
+    let headers: Headers = {};
+    let queryParameters: QueryParameters = {};
+
+    {{#hasParameters}}
+        {{#parameters.path}}
+        path = path.replace('{{#WrapInCurlyBrackets}}{{name}}{{/WrapInCurlyBrackets}}', request.{{name}}.toString());
+        {{/parameters.path}}
+
+        {{#parameters.query}}
+        queryParameters['{{name}}'] = request{{^required}}?{{/required}}.{{name}};
+        {{/parameters.query}}
+
+        {{#parameters.headers}}
+        headers['{{name}}'] = request{{^required}}?{{/required}}.{{name}}
+        {{/parameters.headers}}
+    {{/hasParameters}}
+
+    return Axios.request({
+        ...this.config,
+
+        headers,
+        params: queryParameters,
+        url: `${this.baseUrl}/${path}`
+        
+        {{#requestBody}},data: request.body{{/requestBody}}
+    })
+}

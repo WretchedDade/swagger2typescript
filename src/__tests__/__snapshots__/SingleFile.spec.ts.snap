@@ -1,0 +1,453 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Single file generation should produce the correct output: Models Content 1`] = `
+"/// This file is generated. Do not edit it directly.
+
+//#region Additional Models
+//#endregion Additional Models
+
+//#region Models
+interface Order {
+	id?: number;
+	petId?: number;
+	quantity?: number;
+	shipDate?: string;
+	status?: string;
+	complete?: boolean;
+}
+
+interface Category {
+	id?: number;
+	name?: string;
+}
+
+interface User {
+	id?: number;
+	username?: string;
+	firstName?: string;
+	lastName?: string;
+	email?: string;
+	password?: string;
+	phone?: string;
+	userStatus?: number;
+}
+
+interface Tag {
+	id?: number;
+	name?: string;
+}
+
+interface Pet {
+	id?: number;
+	category?: Category;
+	name: string;
+	photoUrls: Array<string>;
+	tags?: Array<Tag>;
+	status?: string;
+}
+
+interface ApiResponse {
+	code?: number;
+	type?: string;
+	message?: string;
+}
+
+//#endregion Models
+
+//#region Parameter Objects
+interface petRequest {
+	body: Pet;
+}
+
+interface findByStatusRequest {
+	status: void;
+}
+
+interface findByTagsRequest {
+	tags: void;
+}
+
+interface petRequest {
+	petId: void;
+}
+
+interface uploadImageRequest {
+	petId: void;
+	additionalMetadata?: void;
+	file?: void;
+}
+
+interface orderRequest {
+	body: Order;
+}
+
+interface orderRequest {
+	orderId: void;
+}
+
+interface userRequest {
+	body: User;
+}
+
+interface createWithArrayRequest {
+	body: Array<User>;
+}
+
+interface createWithListRequest {
+	body: Array<User>;
+}
+
+interface loginRequest {
+	username: void;
+	password: void;
+}
+
+interface userRequest {
+	username: void;
+}
+
+//#endregion Parameters Objects
+
+type Headers = { [key: string]: string | undefined };
+type QueryParameters = { [key: string]: boolean | string | number | undefined };
+"
+`;
+
+exports[`Single file generation should produce the correct output: Single File Content 1`] = `
+"import Axios, { AxiosRequestConfig } from 'axios';
+
+export default class SwaggerPetstore {
+	private readonly baseUrl: string;
+	private readonly config: AxiosRequestConfig;
+
+	constructor(baseUrl: string, config: AxiosRequestConfig = {}) {
+		this.baseUrl = baseUrl;
+		this.config = config;
+	}
+
+	public async pet(request: petRequest): Promise<void> {
+		let path = '/pet';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async findByStatus(request: findByStatusRequest): Promise<void> {
+		let path = '/pet/findByStatus';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		queryParameters['status'] = request.status;
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async findByTags(request: findByTagsRequest): Promise<void> {
+		let path = '/pet/findByTags';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		queryParameters['tags'] = request.tags;
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async pet(request: petRequest): Promise<void> {
+		let path = '/pet/{petId}';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		path = path.replace('{petId}', request.petId.toString());
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async uploadImage(request: uploadImageRequest): Promise<void> {
+		let path = '/pet/{petId}/uploadImage';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		path = path.replace('{petId}', request.petId.toString());
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async inventory(): Promise<void> {
+		let path = '/store/inventory';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async order(request: orderRequest): Promise<void> {
+		let path = '/store/order';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async order(request: orderRequest): Promise<void> {
+		let path = '/store/order/{orderId}';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		path = path.replace('{orderId}', request.orderId.toString());
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async user(request: userRequest): Promise<void> {
+		let path = '/user';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async createWithArray(request: createWithArrayRequest): Promise<void> {
+		let path = '/user/createWithArray';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async createWithList(request: createWithListRequest): Promise<void> {
+		let path = '/user/createWithList';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async login(request: loginRequest): Promise<void> {
+		let path = '/user/login';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		queryParameters['username'] = request.username;
+		queryParameters['password'] = request.password;
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async logout(): Promise<void> {
+		let path = '/user/logout';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+
+	public async user(request: userRequest): Promise<void> {
+		let path = '/user/{username}';
+		let headers: Headers = {};
+		let queryParameters: QueryParameters = {};
+
+		path = path.replace('{username}', request.username.toString());
+
+		return Axios.request({
+			...this.config,
+
+			headers,
+			params: queryParameters,
+			url: \`\${this.baseUrl}/\${path}\`,
+		});
+	}
+}
+"
+`;
+
+exports[`Single file generation should produce the correct output: Single File Models 1`] = `
+"/// This file is generated. Do not edit it directly.
+
+//#region Additional Models
+//#endregion Additional Models
+
+//#region Models
+interface Order {
+	id?: number;
+	petId?: number;
+	quantity?: number;
+	shipDate?: string;
+	status?: string;
+	complete?: boolean;
+}
+
+interface Category {
+	id?: number;
+	name?: string;
+}
+
+interface User {
+	id?: number;
+	username?: string;
+	firstName?: string;
+	lastName?: string;
+	email?: string;
+	password?: string;
+	phone?: string;
+	userStatus?: number;
+}
+
+interface Tag {
+	id?: number;
+	name?: string;
+}
+
+interface Pet {
+	id?: number;
+	category?: Category;
+	name: string;
+	photoUrls: Array<string>;
+	tags?: Array<Tag>;
+	status?: string;
+}
+
+interface ApiResponse {
+	code?: number;
+	type?: string;
+	message?: string;
+}
+
+//#endregion Models
+
+//#region Parameter Objects
+interface petRequest {
+	body: Pet;
+}
+
+interface findByStatusRequest {
+	status: void;
+}
+
+interface findByTagsRequest {
+	tags: void;
+}
+
+interface petRequest {
+	petId: void;
+}
+
+interface uploadImageRequest {
+	petId: void;
+	additionalMetadata?: void;
+	file?: void;
+}
+
+interface orderRequest {
+	body: Order;
+}
+
+interface orderRequest {
+	orderId: void;
+}
+
+interface userRequest {
+	body: User;
+}
+
+interface createWithArrayRequest {
+	body: Array<User>;
+}
+
+interface createWithListRequest {
+	body: Array<User>;
+}
+
+interface loginRequest {
+	username: void;
+	password: void;
+}
+
+interface userRequest {
+	username: void;
+}
+
+//#endregion Parameters Objects
+
+type Headers = { [key: string]: string | undefined };
+type QueryParameters = { [key: string]: boolean | string | number | undefined };
+"
+`;

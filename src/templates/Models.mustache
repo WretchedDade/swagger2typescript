@@ -1,0 +1,46 @@
+/// This file is generated. Do not edit it directly.
+
+//#region Additional Models
+{{#additionalModels}}
+{{&.}}
+{{/additionalModels}}
+//#endregion Additional Models
+
+//#region Models
+{{#definitions}}
+    {{#isObject}}
+        interface {{&name}} {
+            {{#properties}}
+                {{#CamelCase}}{{name}}{{/CamelCase}}{{^required}}?{{/required}}: {{&type}}
+            {{/properties}}
+        }
+
+    {{/isObject}}
+
+    {{#isEnum}}
+        type {{#PascalCase}}{{name}}{{/PascalCase}} = {{#enum}}| {{.}}{{/enum}};
+
+    {{/isEnum}}
+{{/definitions}}
+//#endregion Models
+
+//#region Parameter Objects
+{{#methods}}
+    {{#hasParameters}}
+    interface {{name}}Request {
+        {{#requestBody}}
+        body: {{&type}}
+        {{/requestBody}}
+
+        {{#parameters.all}}
+        {{name}}{{^required}}?{{/required}}: {{&type}}
+        {{/parameters.all}}
+    }
+
+    {{/hasParameters}}
+{{/methods}}
+//#endregion Parameters Objects
+
+
+type Headers = { [key: string]: string | undefined };
+type QueryParameters = { [key: string]: boolean | string | number | undefined };
