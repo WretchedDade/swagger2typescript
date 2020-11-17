@@ -209,7 +209,7 @@ export type DefaultedOptions = Options & DefaultOptions;
 export type MustacheRender = (text: string) => string;
 
 export interface FileGenerationOutput {
-	type: 'Models' | TemplateOptions['type'];
+	type: 'Models' | TemplateOptions['type'] | 'Index';
 	file: string;
 	content: string;
 	exportName?: string;

@@ -81,10 +81,12 @@ export function GenerateTypescriptCodeFromSwagger(options: Options): FileGenerat
 		}
 	});
 
-	GenerateIndexFile(generatedOutputs, {
-		api,
-		defaultedOptions,
-	});
+	generatedOutputs.push(
+		GenerateIndexFile(generatedOutputs, {
+			api,
+			defaultedOptions,
+		})
+	);
 
 	return generatedOutputs;
 }
@@ -176,7 +178,7 @@ function GenerateMethodFile(method: Method, options: FileGenerationOptions<'File
 function GenerateIndexFile(
 	fileGenerationOutputs: FileGenerationOutput[],
 	options: Omit<FileGenerationOptions<'Single File'>, 'templateOption'>
-) {
+): FileGenerationOutput {
 	const { api, defaultedOptions } = options;
 	const { outputDirectory, prettierConfig } = defaultedOptions;
 
@@ -194,7 +196,17 @@ function GenerateIndexFile(
 		})
 	);
 
-	FileSystem.writeFileSync(`${outputDirectory}/index.ts`, Prettier.format(output, prettierConfig));
+	const file = JoinPathSegments(outputDirectory, `index.ts`);
+	const content = Prettier.format(output, prettierConfig);
+
+	FileSystem.mkdirSync(outputDirectory, { recursive: true });
+	FileSystem.writeFileSync(file, content);
+
+	return {
+		type: 'Index',
+		file,
+		content,
+	};
 }
 
 function AddHelpers<TData extends {}, TTemplateType extends TemplateOptionType>(

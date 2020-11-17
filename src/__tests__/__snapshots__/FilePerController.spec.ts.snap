@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`File per controller generation should produce the correct output: Index Content 1`] = `
+"import Pet from './Pet';
+import Store from './Store';
+import User from './User';
+
+export { Pet, Store, User };
+"
+`;
+
 exports[`File per controller generation should produce the correct output: Models Content 1`] = `
 "/// This file is generated. Do not edit it directly.
 
@@ -60,21 +69,21 @@ interface petRequest {
 }
 
 interface findByStatusRequest {
-	status: void;
+	status: Array<string>;
 }
 
 interface findByTagsRequest {
-	tags: void;
+	tags: Array<string>;
 }
 
 interface petRequest {
-	petId: void;
+	petId: number;
 }
 
 interface uploadImageRequest {
-	petId: void;
-	additionalMetadata?: void;
-	file?: void;
+	petId: number;
+	additionalMetadata?: string;
+	file?: file;
 }
 
 interface orderRequest {
@@ -82,7 +91,7 @@ interface orderRequest {
 }
 
 interface orderRequest {
-	orderId: void;
+	orderId: number;
 }
 
 interface userRequest {
@@ -98,18 +107,15 @@ interface createWithListRequest {
 }
 
 interface loginRequest {
-	username: void;
-	password: void;
+	username: string;
+	password: string;
 }
 
 interface userRequest {
-	username: void;
+	username: string;
 }
 
 //#endregion Parameters Objects
-
-type Headers = { [key: string]: string | undefined };
-type QueryParameters = { [key: string]: boolean | string | number | undefined };
 "
 `;
 
@@ -120,86 +126,102 @@ export default class Pet {
 	private readonly baseUrl: string;
 	private readonly config: AxiosRequestConfig;
 
-	constructor(baseUrl: string, config: AxiosRequestConfig = {}) {
+	constructor(config: AxiosRequestConfig = {}) {
+		const baseUrl = process.env.API_BASE_URL;
+
+		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${Pet} because process.env.API_BASE_URL is undefined\`);
+
 		this.baseUrl = baseUrl;
 		this.config = config;
 	}
 
 	public async pet(request: petRequest): Promise<void> {
-		let path = '/pet';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+		const path = '/pet';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
 		});
 	}
 
-	public async findByStatus(request: findByStatusRequest): Promise<void> {
-		let path = '/pet/findByStatus';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
-
-		queryParameters['status'] = request.status;
+	public async findByStatus(request: findByStatusRequest): Promise<Array<Pet>> {
+		const path = '/pet/findByStatus';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {
+				status: request.status,
+			},
 		});
 	}
 
-	public async findByTags(request: findByTagsRequest): Promise<void> {
-		let path = '/pet/findByTags';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
-
-		queryParameters['tags'] = request.tags;
+	public async findByTags(request: findByTagsRequest): Promise<Array<Pet>> {
+		const path = '/pet/findByTags';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {
+				tags: request.tags,
+			},
 		});
 	}
 
-	public async pet(request: petRequest): Promise<void> {
+	public async pet(request: petRequest): Promise<Pet> {
 		let path = '/pet/{petId}';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
 
 		path = path.replace('{petId}', request.petId.toString());
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
 		});
 	}
 
-	public async uploadImage(request: uploadImageRequest): Promise<void> {
+	public async uploadImage(request: uploadImageRequest): Promise<ApiResponse> {
 		let path = '/pet/{petId}/uploadImage';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
 
 		path = path.replace('{petId}', request.petId.toString());
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
 		});
 	}
 }
@@ -213,52 +235,60 @@ export default class Store {
 	private readonly baseUrl: string;
 	private readonly config: AxiosRequestConfig;
 
-	constructor(baseUrl: string, config: AxiosRequestConfig = {}) {
+	constructor(config: AxiosRequestConfig = {}) {
+		const baseUrl = process.env.API_BASE_URL;
+
+		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${Store} because process.env.API_BASE_URL is undefined\`);
+
 		this.baseUrl = baseUrl;
 		this.config = config;
 	}
 
-	public async inventory(): Promise<void> {
-		let path = '/store/inventory';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+	public async inventory(): Promise<object> {
+		const path = '/store/inventory';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
 		});
 	}
 
-	public async order(request: orderRequest): Promise<void> {
-		let path = '/store/order';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+	public async order(request: orderRequest): Promise<Order> {
+		const path = '/store/order';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
 		});
 	}
 
-	public async order(request: orderRequest): Promise<void> {
+	public async order(request: orderRequest): Promise<Order> {
 		let path = '/store/order/{orderId}';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
 
 		path = path.replace('{orderId}', request.orderId.toString());
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
 		});
 	}
 }
@@ -272,97 +302,115 @@ export default class User {
 	private readonly baseUrl: string;
 	private readonly config: AxiosRequestConfig;
 
-	constructor(baseUrl: string, config: AxiosRequestConfig = {}) {
+	constructor(config: AxiosRequestConfig = {}) {
+		const baseUrl = process.env.API_BASE_URL;
+
+		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${User} because process.env.API_BASE_URL is undefined\`);
+
 		this.baseUrl = baseUrl;
 		this.config = config;
 	}
 
 	public async user(request: userRequest): Promise<void> {
-		let path = '/user';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+		const path = '/user';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
 		});
 	}
 
 	public async createWithArray(request: createWithArrayRequest): Promise<void> {
-		let path = '/user/createWithArray';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+		const path = '/user/createWithArray';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
 		});
 	}
 
 	public async createWithList(request: createWithListRequest): Promise<void> {
-		let path = '/user/createWithList';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+		const path = '/user/createWithList';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'POST',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
 		});
 	}
 
-	public async login(request: loginRequest): Promise<void> {
-		let path = '/user/login';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
-
-		queryParameters['username'] = request.username;
-		queryParameters['password'] = request.password;
+	public async login(request: loginRequest): Promise<string> {
+		const path = '/user/login';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {
+				username: request.username,
+				password: request.password,
+			},
 		});
 	}
 
 	public async logout(): Promise<void> {
-		let path = '/user/logout';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
+		const path = '/user/logout';
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
 		});
 	}
 
-	public async user(request: userRequest): Promise<void> {
+	public async user(request: userRequest): Promise<User> {
 		let path = '/user/{username}';
-		let headers: Headers = {};
-		let queryParameters: QueryParameters = {};
 
 		path = path.replace('{username}', request.username.toString());
 
 		return Axios.request({
 			...this.config,
 
-			headers,
-			params: queryParameters,
+			method: 'GET',
+
 			url: \`\${this.baseUrl}/\${path}\`,
+
+			headers: {},
+
+			params: {},
 		});
 	}
 }
