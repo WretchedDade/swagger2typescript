@@ -4,7 +4,7 @@ import FileSystem from 'fs';
 import Mustache from 'mustache';
 import Prettier from 'prettier';
 
-import { ToPascalCase } from './Utils';
+import { JoinPathSegments, ToForwardSlashes, ToPascalCase } from './Utils';
 import SwaggerParser from './SwaggerParser';
 import {
 	DefaultedOptions,
@@ -15,6 +15,7 @@ import {
 	MustacheRender,
 	Options,
 	ParsedOpenApi,
+	TemplateOptionType,
 } from './Models';
 
 const defaultOptions: DefaultOptions = {
@@ -80,6 +81,13 @@ export function GenerateTypescriptCodeFromSwagger(options: Options): FileGenerat
 		}
 	});
 
+	generatedOutputs.push(
+		GenerateIndexFile(generatedOutputs, {
+			api,
+			defaultedOptions,
+		})
+	);
+
 	return generatedOutputs;
 }
 
@@ -108,65 +116,102 @@ function GenerateModelsFile(api: ParsedOpenApi, defaultedOptions: DefaultedOptio
 	};
 }
 
-function GenerateClassFile(fileName: string, options: FileGenerationOptions): FileGenerationOutput {
+function GenerateClassFile(
+	fileName: string,
+	options: FileGenerationOptions<'Single File' | 'File per Controller'>
+): FileGenerationOutput {
+	const { api, defaultedOptions, templateOption } = options;
+
 	fileName = ToPascalCase(fileName);
 
-	const { outputDirectory, prettierConfig } = options.defaultedOptions;
+	const { prettierConfig } = defaultedOptions;
+	const outputDirectory = JoinPathSegments(defaultedOptions.outputDirectory, templateOption.outputDirectory ?? '');
 
 	const template =
-		options.templateOption.template ??
-		FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Class.mustache')).toString();
+		templateOption.template ?? FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Class.mustache')).toString();
 
-	const output = Mustache.render(template, AddHelpers(options.api, options, { name: fileName }));
+	const output = Mustache.render(template, AddHelpers(api, options, { name: fileName }));
 
-	const file = `${outputDirectory}/${fileName}.ts`;
+	const file = JoinPathSegments(outputDirectory, `${fileName}.ts`);
 	const content = Prettier.format(output, prettierConfig);
 
+	FileSystem.mkdirSync(outputDirectory, { recursive: true });
 	FileSystem.writeFileSync(file, content);
 
 	return {
-		type: options.templateOption.type,
+		type: templateOption.type,
+		file,
+		exportName: fileName,
+		content,
+	};
+}
+
+function GenerateMethodFile(method: Method, options: FileGenerationOptions<'File per Method'>): FileGenerationOutput {
+	const { defaultedOptions, templateOption } = options;
+
+	const fileName = templateOption.fileNameBuilder
+		? (templateOption.fileNameBuilder as (method: Method) => string)(method)
+		: ToPascalCase(method.name);
+
+	const { prettierConfig } = defaultedOptions;
+	const outputDirectory = JoinPathSegments(defaultedOptions.outputDirectory, templateOption.outputDirectory ?? '');
+
+	const template =
+		templateOption.template ?? FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Method.mustache')).toString();
+
+	const output = Mustache.render(template, AddHelpers(method, options, templateOption.buildAdditionalData?.(method) ?? {}));
+
+	const file = JoinPathSegments(outputDirectory, `${fileName}.ts`);
+	const content = Prettier.format(output, prettierConfig);
+
+	FileSystem.mkdirSync(outputDirectory, { recursive: true });
+	FileSystem.writeFileSync(file, content);
+
+	return {
+		type: templateOption.type,
+		file,
+		exportName: fileName,
+		content,
+	};
+}
+
+function GenerateIndexFile(
+	fileGenerationOutputs: FileGenerationOutput[],
+	options: Omit<FileGenerationOptions<'Single File'>, 'templateOption'>
+): FileGenerationOutput {
+	const { api, defaultedOptions } = options;
+	const { outputDirectory, prettierConfig } = defaultedOptions;
+
+	const template = FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Index.mustache')).toString();
+
+	const output = Mustache.render(
+		template,
+		AddHelpers(api, options, {
+			files: fileGenerationOutputs.filter(output => output.type !== 'Models'),
+			ParseFileName: () => (text: string, render: MustacheRender) => {
+				const path = ToForwardSlashes(Path.relative(outputDirectory, render(text)));
+				const extension = Path.extname(path);
+				return path.replace(extension, '');
+			},
+		})
+	);
+
+	const file = JoinPathSegments(outputDirectory, `index.ts`);
+	const content = Prettier.format(output, prettierConfig);
+
+	FileSystem.mkdirSync(outputDirectory, { recursive: true });
+	FileSystem.writeFileSync(file, content);
+
+	return {
+		type: 'Index',
 		file,
 		content,
 	};
 }
 
-function GenerateMethodFile(method: Method, options: FileGenerationOptions): FileGenerationOutput {
-	const fileName = ToPascalCase(method.name);
-
-	const { outputDirectory, prettierConfig } = options.defaultedOptions;
-
-	const template =
-		options.templateOption.template ??
-		FileSystem.readFileSync(Path.resolve(__dirname, '../templates/Class.mustache')).toString();
-
-	const output = Mustache.render(template, AddHelpers(method, options));
-
-	const file = `${outputDirectory}/${fileName}.ts`;
-	const content = Prettier.format(output, prettierConfig);
-
-	FileSystem.writeFileSync(file, content);
-
-	return {
-		type: options.templateOption.type,
-		file,
-		content,
-	};
-}
-
-// function GenerateIndexFile(fileName: string, options: FileGenerationOptions) {
-// 	const { outputDirectory, prettierConfig } = options.defaultedOptions;
-
-// 	const template = FileSystem.readFileSync(Path.resolve(__dirname, './templates/Class.mustache')).toString();
-
-// 	const output = Mustache.render(template, AddHelpers(options.api, options, { name: fileName }));
-
-// 	FileSystem.writeFileSync(`${outputDirectory}/${fileName}.ts`, Prettier.format(output, prettierConfig));
-// }
-
-function AddHelpers<TData extends {}>(
+function AddHelpers<TData extends {}, TTemplateType extends TemplateOptionType>(
 	data: TData,
-	options: Partial<FileGenerationOptions>,
+	options: Partial<FileGenerationOptions<TTemplateType>>,
 	additionalData: { [key: string]: any } = {}
 ) {
 	const { additionalModels } = options.defaultedOptions ?? {};
@@ -174,10 +219,12 @@ function AddHelpers<TData extends {}>(
 	return {
 		...data,
 		...additionalData,
-		...(options?.templateOption?.imports ?? []),
 		additionalModels,
+		imports: options.templateOption?.imports ?? [],
+		baseUrl: options.defaultedOptions?.baseUrlEnvironmentVariableName,
 		CamelCase: () => (text: string, render: MustacheRender) => _.camelCase(render(text)),
 		PascalCase: () => (text: string, render: MustacheRender) => ToPascalCase(render(text)),
+		UpperCase: () => (text: string, render: MustacheRender) => render(text).toUpperCase(),
 		WrapInCurlyBrackets: () => (text: string, render: MustacheRender) => `{${render(text)}}`,
 	};
 }

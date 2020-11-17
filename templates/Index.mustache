@@ -1,0 +1,9 @@
+{{#files}}
+import {{exportName}} from './{{#ParseFileName}}{{&file}}{{/ParseFileName}}';
+{{/files}}
+
+export {
+{{#files}}
+    {{exportName}},
+{{/files}}
+}

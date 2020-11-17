@@ -19,20 +19,26 @@ beforeEach(() => {
 test('File per controller generation should produce the correct output', () => {
 	const generatedOutput = GenerateTypescriptCodeFromSwagger({
 		outputDirectory: 'api',
-		templates: [{ type: 'File per Controller' }],
 		swagger: JSON.stringify(ExampleSwagger),
+		templates: [{ type: 'File per Controller' }],
+		baseUrlEnvironmentVariableName: 'API_BASE_URL',
 	});
 
-	expect(MockFileSystem.mkdirSync).toBeCalledTimes(1);
-	expect(MockFileSystem.mkdirSync).toBeCalledWith('api', { recursive: true });
+	expect(MockFileSystem.mkdirSync).toBeCalledTimes(5);
+	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(1, 'api', { recursive: true });
+	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(2, 'api', { recursive: true });
+	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(3, 'api', { recursive: true });
+	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(4, 'api', { recursive: true });
+	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(5, 'api', { recursive: true });
 
-	expect(MockFileSystem.writeFileSync).toBeCalledTimes(4);
+	expect(MockFileSystem.writeFileSync).toBeCalledTimes(5);
 	expect(MockFileSystem.writeFileSync).toHaveBeenNthCalledWith(1, 'api/Models.d.ts', expect.any(String));
 	expect(MockFileSystem.writeFileSync).toHaveBeenNthCalledWith(2, 'api/Pet.ts', expect.any(String));
 	expect(MockFileSystem.writeFileSync).toHaveBeenNthCalledWith(3, 'api/Store.ts', expect.any(String));
 	expect(MockFileSystem.writeFileSync).toHaveBeenNthCalledWith(4, 'api/User.ts', expect.any(String));
+	expect(MockFileSystem.writeFileSync).toHaveBeenNthCalledWith(5, 'api/index.ts', expect.any(String));
 
-	const [models, pet, store, user, ...rest] = generatedOutput;
+	const [models, pet, store, user, index, ...rest] = generatedOutput;
 
 	expect(models).toMatchObject({
 		type: 'Models',
@@ -58,10 +64,17 @@ test('File per controller generation should produce the correct output', () => {
 		content: expect.any(String),
 	});
 
+	expect(index).toMatchObject({
+		type: 'Index',
+		file: 'api/index.ts',
+		content: expect.any(String),
+	});
+
 	expect(models.content).toMatchSnapshot('Models Content');
 	expect(pet.content).toMatchSnapshot('Pet Content');
 	expect(store.content).toMatchSnapshot('Store Content');
 	expect(user.content).toMatchSnapshot('User Content');
+	expect(index.content).toMatchSnapshot('Index Content');
 
 	expect(rest).toHaveLength(0);
 });

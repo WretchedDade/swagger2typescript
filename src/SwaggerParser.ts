@@ -2,6 +2,7 @@ import { map, toPath } from 'lodash';
 import {
 	DefaultedOptions,
 	Definition,
+	HttpMethod,
 	HttpMethodInfo,
 	KeyValueObject,
 	Method,
@@ -49,13 +50,18 @@ export default class SwaggerParser {
 
 	public BuildMethods(): Method[] {
 		const { paths } = this.swagger;
+
 		return Object.keys(paths)
 			.map((path: string) => {
 				let _: string, rest: string[], controller: string;
 
 				if (this.options.controllerNameParser !== undefined) {
 					controller = this.options.controllerNameParser(path);
-					rest = path.split('/').filter(part => part.length && !part.includes('{') && part !== controller);
+
+					const parts = path.split('/').filter(part => part.length && !part.includes('{'));
+					const indexOfController = parts.findIndex(part => part === controller);
+
+					rest = parts.slice(indexOfController + 1);
 				} else [controller, ...rest] = path.split('/').filter(part => part.length && !part.includes('{'));
 
 				const pathObject = paths[path];
@@ -69,25 +75,32 @@ export default class SwaggerParser {
 					in: parameter.in,
 					name: parameter.name,
 					required: parameter.required,
-					...this.BuildSchema(parameter.schema),
+					...this.BuildSchema(parameter.schema ?? parameter),
 				}));
 
+				const pathParameters = parsedParameters?.filter(parameter => parameter.in === 'path') ?? [];
+
 				return {
-					httpMethod,
+					httpMethod: httpMethod.toUpperCase() as HttpMethod,
 					controller,
 					name: rest.length > 0 ? rest.join('') : controller,
 					fullPath: path,
 					tags,
 					summary,
 					hasParameters: (parsedParameters !== undefined && parsedParameters.length > 0) || requestBody !== undefined,
+					hasPathParameters: pathParameters.length > 0,
 					parameters: {
-						all: parsedParameters ?? [],
-						path: parsedParameters?.filter(parameter => parameter.in === 'path') ?? [],
+						all: parsedParameters?.filter(parameter => parameter.in !== 'body') ?? [],
+						path: pathParameters,
 						query: parsedParameters?.filter(parameter => parameter.in === 'query') ?? [],
 						headers: parsedParameters?.filter(parameter => parameter.in === 'header') ?? [],
 					},
-					requestBody: requestBody && this.BuildSchema(requestBody?.content?.['application/json'].schema),
-					successResponse: successResponse && this.BuildSchema(successResponse.content?.['application/json']?.schema),
+					requestBody:
+						(requestBody && this.BuildSchema(requestBody?.content?.['application/json'].schema)) ??
+						parsedParameters?.find(parameter => parameter.in === 'body'),
+					successResponse:
+						successResponse &&
+						this.BuildSchema(successResponse.schema ?? successResponse.content?.['application/json']?.schema),
 				};
 			})
 			.filter(IsDefined);
