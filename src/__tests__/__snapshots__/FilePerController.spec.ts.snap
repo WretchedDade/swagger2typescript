@@ -120,7 +120,7 @@ interface userRequest {
 `;
 
 exports[`File per controller generation should produce the correct output: Pet Content 1`] = `
-"import Axios, { AxiosRequestConfig } from 'axios';
+"import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export default class Pet {
 	private readonly baseUrl: string;
@@ -135,10 +135,10 @@ export default class Pet {
 		this.config = config;
 	}
 
-	public async pet(request: petRequest): Promise<void> {
+	public async pet(request: petRequest): Promise<AxiosResponse<void>> {
 		const path = '/pet';
 
-		return Axios.request({
+		return Axios.request<void>({
 			...this.config,
 
 			method: 'POST',
@@ -153,10 +153,10 @@ export default class Pet {
 		});
 	}
 
-	public async findByStatus(request: findByStatusRequest): Promise<Array<Pet>> {
+	public async findByStatus(request: findByStatusRequest): Promise<AxiosResponse<Array<Pet>>> {
 		const path = '/pet/findByStatus';
 
-		return Axios.request({
+		return Axios.request<Array<Pet>>({
 			...this.config,
 
 			method: 'GET',
@@ -171,10 +171,10 @@ export default class Pet {
 		});
 	}
 
-	public async findByTags(request: findByTagsRequest): Promise<Array<Pet>> {
+	public async findByTags(request: findByTagsRequest): Promise<AxiosResponse<Array<Pet>>> {
 		const path = '/pet/findByTags';
 
-		return Axios.request({
+		return Axios.request<Array<Pet>>({
 			...this.config,
 
 			method: 'GET',
@@ -189,12 +189,12 @@ export default class Pet {
 		});
 	}
 
-	public async pet(request: petRequest): Promise<Pet> {
+	public async pet(request: petRequest): Promise<AxiosResponse<Pet>> {
 		let path = '/pet/{petId}';
 
 		path = path.replace('{petId}', request.petId.toString());
 
-		return Axios.request({
+		return Axios.request<Pet>({
 			...this.config,
 
 			method: 'GET',
@@ -207,12 +207,12 @@ export default class Pet {
 		});
 	}
 
-	public async uploadImage(request: uploadImageRequest): Promise<ApiResponse> {
+	public async uploadImage(request: uploadImageRequest): Promise<AxiosResponse<ApiResponse>> {
 		let path = '/pet/{petId}/uploadImage';
 
 		path = path.replace('{petId}', request.petId.toString());
 
-		return Axios.request({
+		return Axios.request<ApiResponse>({
 			...this.config,
 
 			method: 'POST',
@@ -229,7 +229,7 @@ export default class Pet {
 `;
 
 exports[`File per controller generation should produce the correct output: Store Content 1`] = `
-"import Axios, { AxiosRequestConfig } from 'axios';
+"import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export default class Store {
 	private readonly baseUrl: string;
@@ -244,10 +244,10 @@ export default class Store {
 		this.config = config;
 	}
 
-	public async inventory(): Promise<object> {
+	public async inventory(): Promise<AxiosResponse<object>> {
 		const path = '/store/inventory';
 
-		return Axios.request({
+		return Axios.request<object>({
 			...this.config,
 
 			method: 'GET',
@@ -256,10 +256,10 @@ export default class Store {
 		});
 	}
 
-	public async order(request: orderRequest): Promise<Order> {
+	public async order(request: orderRequest): Promise<AxiosResponse<Order>> {
 		const path = '/store/order';
 
-		return Axios.request({
+		return Axios.request<Order>({
 			...this.config,
 
 			method: 'POST',
@@ -274,12 +274,12 @@ export default class Store {
 		});
 	}
 
-	public async order(request: orderRequest): Promise<Order> {
+	public async order(request: orderRequest): Promise<AxiosResponse<Order>> {
 		let path = '/store/order/{orderId}';
 
 		path = path.replace('{orderId}', request.orderId.toString());
 
-		return Axios.request({
+		return Axios.request<Order>({
 			...this.config,
 
 			method: 'GET',
@@ -296,7 +296,7 @@ export default class Store {
 `;
 
 exports[`File per controller generation should produce the correct output: User Content 1`] = `
-"import Axios, { AxiosRequestConfig } from 'axios';
+"import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export default class User {
 	private readonly baseUrl: string;
@@ -311,10 +311,10 @@ export default class User {
 		this.config = config;
 	}
 
-	public async user(request: userRequest): Promise<void> {
+	public async user(request: userRequest): Promise<AxiosResponse<void>> {
 		const path = '/user';
 
-		return Axios.request({
+		return Axios.request<void>({
 			...this.config,
 
 			method: 'POST',
@@ -329,10 +329,10 @@ export default class User {
 		});
 	}
 
-	public async createWithArray(request: createWithArrayRequest): Promise<void> {
+	public async createWithArray(request: createWithArrayRequest): Promise<AxiosResponse<void>> {
 		const path = '/user/createWithArray';
 
-		return Axios.request({
+		return Axios.request<void>({
 			...this.config,
 
 			method: 'POST',
@@ -347,10 +347,10 @@ export default class User {
 		});
 	}
 
-	public async createWithList(request: createWithListRequest): Promise<void> {
+	public async createWithList(request: createWithListRequest): Promise<AxiosResponse<void>> {
 		const path = '/user/createWithList';
 
-		return Axios.request({
+		return Axios.request<void>({
 			...this.config,
 
 			method: 'POST',
@@ -365,10 +365,10 @@ export default class User {
 		});
 	}
 
-	public async login(request: loginRequest): Promise<string> {
+	public async login(request: loginRequest): Promise<AxiosResponse<string>> {
 		const path = '/user/login';
 
-		return Axios.request({
+		return Axios.request<string>({
 			...this.config,
 
 			method: 'GET',
@@ -384,10 +384,10 @@ export default class User {
 		});
 	}
 
-	public async logout(): Promise<void> {
+	public async logout(): Promise<AxiosResponse<void>> {
 		const path = '/user/logout';
 
-		return Axios.request({
+		return Axios.request<void>({
 			...this.config,
 
 			method: 'GET',
@@ -396,12 +396,12 @@ export default class User {
 		});
 	}
 
-	public async user(request: userRequest): Promise<User> {
+	public async user(request: userRequest): Promise<AxiosResponse<User>> {
 		let path = '/user/{username}';
 
 		path = path.replace('{username}', request.username.toString());
 
-		return Axios.request({
+		return Axios.request<User>({
 			...this.config,
 
 			method: 'GET',

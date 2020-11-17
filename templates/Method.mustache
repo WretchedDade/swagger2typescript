@@ -1,10 +1,10 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 {{#imports}}
 {{&.}}
 {{/imports}}
 
-export default async function {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+export default async function {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<AxiosResponse<{{&type}}>>{{/successResponse}} {
     const baseUrl = process.env.{{&baseUrl}}
 
     if (baseUrl === undefined)
@@ -18,7 +18,7 @@ export default async function {{name}}({{#hasParameters}}request: {{name}}{{para
         {{/parameters.path}}
     {{/hasParameters}}
 
-    return Axios.request({
+    return Axios.request<{{#successResponse}}{{&type}}{{/successResponse}}>({
         ...config,
 
         method: "{{#UpperCase}}{{httpMethod}}{{/UpperCase}}",
