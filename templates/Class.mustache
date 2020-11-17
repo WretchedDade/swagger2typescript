@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 {{#imports}}
 {{&.}}
@@ -19,7 +19,7 @@ export default class {{name}} {
 	}
     {{#methods}}
 
-    public async {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}{{/hasParameters}}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+    public async {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}{{/hasParameters}}){{#successResponse}}: Promise<AxiosResponse<{{&type}}>>{{/successResponse}} {
         {{#hasPathParameters}}let{{/hasPathParameters}}{{^hasPathParameters}}const{{/hasPathParameters}} path = '{{&fullPath}}';
 
         {{#hasParameters}}
@@ -28,7 +28,7 @@ export default class {{name}} {
             {{/parameters.path}}
         {{/hasParameters}}
 
-        return Axios.request({
+        return Axios.request<{{#successResponse}}{{&type}}{{/successResponse}}>({
             ...this.config,
 
             method: "{{#UpperCase}}{{httpMethod}}{{/UpperCase}}",
