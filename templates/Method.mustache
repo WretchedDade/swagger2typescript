@@ -4,7 +4,7 @@ import Axios, { AxiosRequestConfig } from 'axios';
 {{&.}}
 {{/imports}}
 
-export default async function {{name}}({{#hasParameters}}request: {{name}}Request, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+export default async function {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
     const baseUrl = process.env.{{&baseUrl}}
 
     if (baseUrl === undefined)

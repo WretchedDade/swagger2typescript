@@ -180,6 +180,13 @@ export interface Options {
 	modelsFilter?: (model: Definition) => boolean;
 
 	/**
+	 * The suffix to be appended to the method name for the type containing the parameters for the request.
+	 *
+	 * @default Request
+	 */
+	parameterObjectSuffix?: string;
+
+	/**
 	 * Used to map a type in Open API to a relevant typescript type. e.g. integer -> number
 	 * @default
 	 * {

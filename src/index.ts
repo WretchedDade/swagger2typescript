@@ -31,6 +31,7 @@ const defaultOptions: DefaultOptions = {
 		printWidth: 130,
 	},
 	additionalModels: [],
+	parameterObjectSuffix: 'Request',
 };
 
 export function GenerateTypescriptCodeFromSwagger(options: Options): FileGenerationOutput[] {
@@ -222,6 +223,7 @@ function AddHelpers<TData extends {}, TTemplateType extends TemplateOptionType>(
 		additionalModels,
 		imports: options.templateOption?.imports ?? [],
 		baseUrl: options.defaultedOptions?.baseUrlEnvironmentVariableName,
+		parameterObjectSuffix: options.defaultedOptions?.parameterObjectSuffix,
 		CamelCase: () => (text: string, render: MustacheRender) => _.camelCase(render(text)),
 		PascalCase: () => (text: string, render: MustacheRender) => ToPascalCase(render(text)),
 		UpperCase: () => (text: string, render: MustacheRender) => render(text).toUpperCase(),
