@@ -27,7 +27,7 @@
 //#region Parameter Objects
 {{#methods}}
     {{#hasParameters}}
-    interface {{name}}Request {
+    interface {{name}}{{parameterObjectSuffix}} {
         {{#requestBody}}
         body: {{&type}}
         {{/requestBody}}
