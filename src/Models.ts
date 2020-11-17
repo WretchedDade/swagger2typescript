@@ -1,10 +1,11 @@
-import { StringNullableChain, template } from 'lodash';
 import Prettier from 'prettier';
+
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS';
 
 export type StatusCode = '200' | '201' | '202' | '203' | '204' | '205' | '206';
 export type SchemaType = 'string' | 'array';
 export type ContentType = 'application/json';
-export type ParameterLocation = 'query' | 'header' | 'path';
+export type ParameterLocation = 'query' | 'header' | 'path' | 'body';
 export type TypeDefinitionType = 'object';
 
 export type KeyValueObject<TValue = string> = { [key: string]: TValue };
@@ -40,7 +41,8 @@ export interface HttpMethodInfo {
 	responses: {
 		[key in StatusCode]: {
 			description: string;
-			content: Content;
+			content?: Content;
+			schema?: Schema;
 		};
 	};
 }
@@ -70,11 +72,12 @@ export interface Parameter extends ParsedSchema {
 export interface Method {
 	name: string;
 	fullPath: string;
-	httpMethod: string;
+	httpMethod: HttpMethod;
 	controller: string;
 	tags?: string[];
 	summary?: string;
 	hasParameters: boolean;
+	hasPathParameters: boolean;
 	parameters: {
 		all: Parameter[];
 		path: Parameter[];
@@ -119,14 +122,38 @@ export interface ParsedOpenApiGroupedByControllers {
 	definitions: Definition[];
 }
 
-export type TemplateOptions = (
-	| { type: 'Single File'; fileNameBuilder?: (api: ParsedOpenApi) => string }
-	| { type: 'File per Method'; fileNameBuilder?: (method: Method) => string }
-	| { type: 'File per Controller'; fileNameBuilder?: (controller: string) => string }
-) & { template?: string; imports?: string[] };
+export type TemplateOptionType = 'Single File' | 'File per Method' | 'File per Controller';
+
+export type TemplateOption<TKey extends TemplateOptionType> = {
+	type: TKey;
+
+	template?: string;
+	imports?: string[];
+	outputDirectory?: string;
+
+	fileNameBuilder?: (
+		data: TKey extends 'Single File' ? ParsedOpenApi : TKey extends 'File per Method' ? Method : string
+	) => string;
+
+	buildAdditionalData?: (
+		data: TKey extends 'Single File' ? ParsedOpenApi : TKey extends 'File per Method' ? Method : string
+	) => {
+		[key: string]: string | number | boolean | (() => (text: string, render: MustacheRender) => string | null | undefined);
+	};
+};
+
+export type TemplateOptions =
+	| TemplateOption<'Single File'>
+	| TemplateOption<'File per Method'>
+	| TemplateOption<'File per Controller'>;
 
 export interface Options {
 	swagger: string;
+
+	/**
+	 * The name of the environment variable that contains the baseUrl
+	 */
+	baseUrlEnvironmentVariableName: string;
 
 	/**
 	 * The directory to output generated content.
@@ -174,7 +201,9 @@ export interface Options {
 	additionalModels?: string[];
 }
 
-export type DefaultOptions = Required<Omit<Options, 'swagger' | 'templates' | 'controllerNameParser' | 'modelsFilter'>>;
+export type DefaultOptions = Required<
+	Omit<Options, 'baseUrlEnvironmentVariableName' | 'swagger' | 'templates' | 'controllerNameParser' | 'modelsFilter'>
+>;
 export type DefaultedOptions = Options & DefaultOptions;
 
 export type MustacheRender = (text: string) => string;
@@ -183,10 +212,11 @@ export interface FileGenerationOutput {
 	type: 'Models' | TemplateOptions['type'];
 	file: string;
 	content: string;
+	exportName?: string;
 }
 
-export interface FileGenerationOptions {
+export interface FileGenerationOptions<TTemplateType extends TemplateOptionType> {
 	api: ParsedOpenApi;
 	defaultedOptions: DefaultedOptions;
-	templateOption: TemplateOptions;
+	templateOption: TemplateOption<TTemplateType>;
 }

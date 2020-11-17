@@ -1,31 +1,43 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 
-export default async function {{name}}({{#hasParameters}}request: {{name}}Request, {{/hasParameters}}baseUrl: string, config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+{{#imports}}
+{{&.}}
+{{/imports}}
 
-    let path = '{{&fullPath}}';
-    let headers: Headers = {};
-    let queryParameters: QueryParameters = {};
+export default async function {{name}}({{#hasParameters}}request: {{name}}Request, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<{{&type}}>{{/successResponse}} {
+    const baseUrl = process.env.{{&baseUrl}}
+
+    if (baseUrl === undefined)
+        throw new Error(`Cannot complete the request because process.env.{{&baseUrl}} is undefined`);
+
+    {{#hasPathParameters}}let{{/hasPathParameters}}{{^hasPathParameters}}const{{/hasPathParameters}} path = '{{&fullPath}}';
 
     {{#hasParameters}}
         {{#parameters.path}}
         path = path.replace('{{#WrapInCurlyBrackets}}{{name}}{{/WrapInCurlyBrackets}}', request.{{name}}.toString());
         {{/parameters.path}}
-
-        {{#parameters.query}}
-        queryParameters['{{name}}'] = request{{^required}}?{{/required}}.{{name}};
-        {{/parameters.query}}
-
-        {{#parameters.headers}}
-        headers['{{name}}'] = request{{^required}}?{{/required}}.{{name}}
-        {{/parameters.headers}}
     {{/hasParameters}}
 
     return Axios.request({
-        ...this.config,
+        ...config,
 
-        headers,
-        params: queryParameters,
-        url: `${this.baseUrl}/${path}`
+        method: "{{#UpperCase}}{{httpMethod}}{{/UpperCase}}",
+
+        url: `${baseUrl}/${path}`,
+        
+        {{#hasParameters}}
+        headers: {
+        {{#parameters.headers}}
+            {{name}}: request{{^required}}?{{/required}}.{{name}},
+        {{/parameters.headers}}
+        },
+
+        params: {
+        {{#parameters.query}}
+            {{name}}: request{{^required}}?{{/required}}.{{name}},
+        {{/parameters.query}}
+        }
+        {{/hasParameters}}
         
         {{#requestBody}},data: request.body{{/requestBody}}
     })
