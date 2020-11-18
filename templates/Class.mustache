@@ -9,10 +9,7 @@ export default class {{name}} {
 	private readonly config: AxiosRequestConfig;
 
 	constructor(config: AxiosRequestConfig = {}) {
-        const baseUrl = process.env.{{&baseUrl}};
-
-        if (baseUrl === undefined)
-            throw new Error(`Cannot construct a ${{#WrapInCurlyBrackets}}{{name}}{{/WrapInCurlyBrackets}} because process.env.{{&baseUrl}} is undefined`);
+        const baseUrl = process.env.{{&baseUrl}} ?? '';
 
 		this.baseUrl = baseUrl;
 		this.config = config;

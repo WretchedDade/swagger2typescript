@@ -5,10 +5,7 @@ import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 {{/imports}}
 
 export default async function {{name}}({{#hasParameters}}request: {{name}}{{parameterObjectSuffix}}, {{/hasParameters}} config: AxiosRequestConfig = {}){{#successResponse}}: Promise<AxiosResponse<{{&type}}>>{{/successResponse}} {
-    const baseUrl = process.env.{{&baseUrl}}
-
-    if (baseUrl === undefined)
-        throw new Error(`Cannot complete the request because process.env.{{&baseUrl}} is undefined`);
+    const baseUrl = process.env.{{&baseUrl}} ?? '';
 
     {{#hasPathParameters}}let{{/hasPathParameters}}{{^hasPathParameters}}const{{/hasPathParameters}} path = '{{&fullPath}}';
 

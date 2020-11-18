@@ -127,9 +127,7 @@ export default class Pet {
 	private readonly config: AxiosRequestConfig;
 
 	constructor(config: AxiosRequestConfig = {}) {
-		const baseUrl = process.env.API_BASE_URL;
-
-		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${Pet} because process.env.API_BASE_URL is undefined\`);
+		const baseUrl = process.env.API_BASE_URL ?? '';
 
 		this.baseUrl = baseUrl;
 		this.config = config;
@@ -236,9 +234,7 @@ export default class Store {
 	private readonly config: AxiosRequestConfig;
 
 	constructor(config: AxiosRequestConfig = {}) {
-		const baseUrl = process.env.API_BASE_URL;
-
-		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${Store} because process.env.API_BASE_URL is undefined\`);
+		const baseUrl = process.env.API_BASE_URL ?? '';
 
 		this.baseUrl = baseUrl;
 		this.config = config;
@@ -303,9 +299,7 @@ export default class User {
 	private readonly config: AxiosRequestConfig;
 
 	constructor(config: AxiosRequestConfig = {}) {
-		const baseUrl = process.env.API_BASE_URL;
-
-		if (baseUrl === undefined) throw new Error(\`Cannot construct a \${User} because process.env.API_BASE_URL is undefined\`);
+		const baseUrl = process.env.API_BASE_URL ?? '';
 
 		this.baseUrl = baseUrl;
 		this.config = config;
