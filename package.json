@@ -1,6 +1,6 @@
 {
 	"name": "typescript-codegen-from-swagger",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "Utility for generating services and types to call an API from a swagger/OpenAPI specification file.",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
