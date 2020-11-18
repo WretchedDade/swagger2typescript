@@ -125,10 +125,7 @@ export default class SwaggerPetstore {
 	private readonly config: AxiosRequestConfig;
 
 	constructor(config: AxiosRequestConfig = {}) {
-		const baseUrl = process.env.API_BASE_URL;
-
-		if (baseUrl === undefined)
-			throw new Error(\`Cannot construct a \${SwaggerPetstore} because process.env.API_BASE_URL is undefined\`);
+		const baseUrl = process.env.API_BASE_URL ?? '';
 
 		this.baseUrl = baseUrl;
 		this.config = config;
