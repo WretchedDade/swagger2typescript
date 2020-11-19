@@ -30,7 +30,7 @@ export default class {{name}} {
 
             method: "{{#UpperCase}}{{httpMethod}}{{/UpperCase}}",
 
-            url: `${this.baseUrl}/${path}`,
+            url: `${this.baseUrl}${path}`,
             
             {{#hasParameters}}
             headers: {

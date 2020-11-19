@@ -20,7 +20,7 @@ export default async function {{name}}({{#hasParameters}}request: {{name}}{{para
 
         method: "{{#UpperCase}}{{httpMethod}}{{/UpperCase}}",
 
-        url: `${baseUrl}/${path}`,
+        url: `${baseUrl}${path}`,
         
         {{#hasParameters}}
         headers: {
