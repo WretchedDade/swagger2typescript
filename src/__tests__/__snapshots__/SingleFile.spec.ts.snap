@@ -139,7 +139,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -157,7 +157,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -175,7 +175,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -195,7 +195,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -213,7 +213,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -229,7 +229,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 		});
 	}
 
@@ -241,7 +241,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -261,7 +261,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -277,7 +277,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -295,7 +295,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -313,7 +313,7 @@ export default class SwaggerPetstore {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -331,7 +331,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -350,7 +350,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 		});
 	}
 
@@ -364,7 +364,7 @@ export default class SwaggerPetstore {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 

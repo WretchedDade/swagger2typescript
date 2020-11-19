@@ -141,7 +141,7 @@ export default class Pet {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -159,7 +159,7 @@ export default class Pet {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -177,7 +177,7 @@ export default class Pet {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -197,7 +197,7 @@ export default class Pet {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -215,7 +215,7 @@ export default class Pet {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -248,7 +248,7 @@ export default class Store {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 		});
 	}
 
@@ -260,7 +260,7 @@ export default class Store {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -280,7 +280,7 @@ export default class Store {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -313,7 +313,7 @@ export default class User {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -331,7 +331,7 @@ export default class User {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -349,7 +349,7 @@ export default class User {
 
 			method: 'POST',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -367,7 +367,7 @@ export default class User {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
@@ -386,7 +386,7 @@ export default class User {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 		});
 	}
 
@@ -400,7 +400,7 @@ export default class User {
 
 			method: 'GET',
 
-			url: \`\${this.baseUrl}/\${path}\`,
+			url: \`\${this.baseUrl}\${path}\`,
 
 			headers: {},
 
