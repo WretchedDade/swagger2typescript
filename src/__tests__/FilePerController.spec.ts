@@ -5,6 +5,7 @@ import FileSystem from 'fs';
 
 jest.mock('fs', () => ({
 	...jest.requireActual<typeof FileSystem>('fs'),
+	rmdirSync: jest.fn(),
 	mkdirSync: jest.fn(),
 	writeFileSync: jest.fn(),
 }));
@@ -12,6 +13,7 @@ jest.mock('fs', () => ({
 const MockFileSystem = FileSystem as jest.Mocked<typeof FileSystem>;
 
 beforeEach(() => {
+	MockFileSystem.rmdirSync.mockReset();
 	MockFileSystem.mkdirSync.mockReset();
 	MockFileSystem.writeFileSync.mockReset();
 });
@@ -23,6 +25,9 @@ test('File per controller generation should produce the correct output', () => {
 		templates: [{ type: 'File per Controller' }],
 		baseUrlEnvironmentVariableName: 'API_BASE_URL',
 	});
+
+	expect(MockFileSystem.rmdirSync).toBeCalledTimes(1);
+	expect(MockFileSystem.rmdirSync).toHaveBeenCalledWith('api', { recursive: true });
 
 	expect(MockFileSystem.mkdirSync).toBeCalledTimes(5);
 	expect(MockFileSystem.mkdirSync).toHaveBeenNthCalledWith(1, 'api', { recursive: true });
