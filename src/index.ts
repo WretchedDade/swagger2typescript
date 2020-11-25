@@ -41,6 +41,7 @@ export function GenerateTypescriptCodeFromSwagger(options: Options): FileGenerat
 	const swaggerParser = new SwaggerParser(defaultedOptions);
 	const api = swaggerParser.ParseSwagger();
 
+	FileSystem.rmdirSync(outputDirectory, { recursive: true });
 	FileSystem.mkdirSync(outputDirectory, { recursive: true });
 
 	const generatedOutputs: FileGenerationOutput[] = [];
