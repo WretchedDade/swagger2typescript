@@ -62,54 +62,83 @@ interface ApiResponse {
 //#endregion Models
 
 //#region Parameter Objects
-interface petRequest {
+interface addPetRequest {
 	body: Pet;
 }
 
-interface findByStatusRequest {
+interface updatePetRequest {
+	body: Pet;
+}
+
+interface findPetsByStatusRequest {
 	status: Array<string>;
 }
 
-interface findByTagsRequest {
+interface findPetsByTagsRequest {
 	tags: Array<string>;
 }
 
-interface petRequest {
+interface getPetByIdRequest {
 	petId: number;
 }
 
-interface uploadImageRequest {
+interface updatePetWithFormRequest {
+	petId: number;
+	name?: string;
+	status?: string;
+}
+
+interface deletePetRequest {
+	api_key?: string;
+	petId: number;
+}
+
+interface uploadFileRequest {
 	petId: number;
 	additionalMetadata?: string;
 	file?: file;
 }
 
-interface orderRequest {
+interface placeOrderRequest {
 	body: Order;
 }
 
-interface orderRequest {
+interface getOrderByIdRequest {
 	orderId: number;
 }
 
-interface userRequest {
+interface deleteOrderRequest {
+	orderId: number;
+}
+
+interface createUserRequest {
 	body: User;
 }
 
-interface createWithArrayRequest {
+interface createUsersWithArrayInputRequest {
 	body: Array<User>;
 }
 
-interface createWithListRequest {
+interface createUsersWithListInputRequest {
 	body: Array<User>;
 }
 
-interface loginRequest {
+interface loginUserRequest {
 	username: string;
 	password: string;
 }
 
-interface userRequest {
+interface getUserByNameRequest {
+	username: string;
+}
+
+interface updateUserRequest {
+	body: User;
+
+	username: string;
+}
+
+interface deleteUserRequest {
 	username: string;
 }
 
@@ -131,7 +160,7 @@ export default class SwaggerPetstore {
 		this.config = config;
 	}
 
-	public async pet(request: petRequest): Promise<AxiosResponse<void>> {
+	public async addPet(request: addPetRequest): Promise<AxiosResponse<void>> {
 		const path = '/pet';
 
 		return Axios.request<void>({
@@ -149,7 +178,25 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async findByStatus(request: findByStatusRequest): Promise<AxiosResponse<Array<Pet>>> {
+	public async updatePet(request: updatePetRequest): Promise<AxiosResponse<void>> {
+		const path = '/pet';
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'PUT',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
+		});
+	}
+
+	public async findPetsByStatus(request: findPetsByStatusRequest): Promise<AxiosResponse<Array<Pet>>> {
 		const path = '/pet/findByStatus';
 
 		return Axios.request<Array<Pet>>({
@@ -167,7 +214,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async findByTags(request: findByTagsRequest): Promise<AxiosResponse<Array<Pet>>> {
+	public async findPetsByTags(request: findPetsByTagsRequest): Promise<AxiosResponse<Array<Pet>>> {
 		const path = '/pet/findByTags';
 
 		return Axios.request<Array<Pet>>({
@@ -185,7 +232,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async pet(request: petRequest): Promise<AxiosResponse<Pet>> {
+	public async getPetById(request: getPetByIdRequest): Promise<AxiosResponse<Pet>> {
 		let path = '/pet/{petId}';
 
 		path = path.replace('{petId}', request.petId.toString());
@@ -203,7 +250,45 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async uploadImage(request: uploadImageRequest): Promise<AxiosResponse<ApiResponse>> {
+	public async updatePetWithForm(request: updatePetWithFormRequest): Promise<AxiosResponse<void>> {
+		let path = '/pet/{petId}';
+
+		path = path.replace('{petId}', request.petId.toString());
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'POST',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {},
+
+			params: {},
+		});
+	}
+
+	public async deletePet(request: deletePetRequest): Promise<AxiosResponse<void>> {
+		let path = '/pet/{petId}';
+
+		path = path.replace('{petId}', request.petId.toString());
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'DELETE',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {
+				api_key: request?.api_key,
+			},
+
+			params: {},
+		});
+	}
+
+	public async uploadFile(request: uploadFileRequest): Promise<AxiosResponse<ApiResponse>> {
 		let path = '/pet/{petId}/uploadImage';
 
 		path = path.replace('{petId}', request.petId.toString());
@@ -221,7 +306,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async inventory(): Promise<AxiosResponse<object>> {
+	public async getInventory(): Promise<AxiosResponse<object>> {
 		const path = '/store/inventory';
 
 		return Axios.request<object>({
@@ -233,7 +318,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async order(request: orderRequest): Promise<AxiosResponse<Order>> {
+	public async placeOrder(request: placeOrderRequest): Promise<AxiosResponse<Order>> {
 		const path = '/store/order';
 
 		return Axios.request<Order>({
@@ -251,7 +336,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async order(request: orderRequest): Promise<AxiosResponse<Order>> {
+	public async getOrderById(request: getOrderByIdRequest): Promise<AxiosResponse<Order>> {
 		let path = '/store/order/{orderId}';
 
 		path = path.replace('{orderId}', request.orderId.toString());
@@ -269,7 +354,25 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async user(request: userRequest): Promise<AxiosResponse<void>> {
+	public async deleteOrder(request: deleteOrderRequest): Promise<AxiosResponse<void>> {
+		let path = '/store/order/{orderId}';
+
+		path = path.replace('{orderId}', request.orderId.toString());
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'DELETE',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {},
+
+			params: {},
+		});
+	}
+
+	public async createUser(request: createUserRequest): Promise<AxiosResponse<void>> {
 		const path = '/user';
 
 		return Axios.request<void>({
@@ -287,7 +390,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async createWithArray(request: createWithArrayRequest): Promise<AxiosResponse<void>> {
+	public async createUsersWithArrayInput(request: createUsersWithArrayInputRequest): Promise<AxiosResponse<void>> {
 		const path = '/user/createWithArray';
 
 		return Axios.request<void>({
@@ -305,7 +408,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async createWithList(request: createWithListRequest): Promise<AxiosResponse<void>> {
+	public async createUsersWithListInput(request: createUsersWithListInputRequest): Promise<AxiosResponse<void>> {
 		const path = '/user/createWithList';
 
 		return Axios.request<void>({
@@ -323,7 +426,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async login(request: loginRequest): Promise<AxiosResponse<string>> {
+	public async loginUser(request: loginUserRequest): Promise<AxiosResponse<string>> {
 		const path = '/user/login';
 
 		return Axios.request<string>({
@@ -342,7 +445,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async logout(): Promise<AxiosResponse<void>> {
+	public async logoutUser(): Promise<AxiosResponse<void>> {
 		const path = '/user/logout';
 
 		return Axios.request<void>({
@@ -354,7 +457,7 @@ export default class SwaggerPetstore {
 		});
 	}
 
-	public async user(request: userRequest): Promise<AxiosResponse<User>> {
+	public async getUserByName(request: getUserByNameRequest): Promise<AxiosResponse<User>> {
 		let path = '/user/{username}';
 
 		path = path.replace('{username}', request.username.toString());
@@ -363,6 +466,44 @@ export default class SwaggerPetstore {
 			...this.config,
 
 			method: 'GET',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {},
+
+			params: {},
+		});
+	}
+
+	public async updateUser(request: updateUserRequest): Promise<AxiosResponse<void>> {
+		let path = '/user/{username}';
+
+		path = path.replace('{username}', request.username.toString());
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'PUT',
+
+			url: \`\${this.baseUrl}\${path}\`,
+
+			headers: {},
+
+			params: {},
+
+			data: request.body,
+		});
+	}
+
+	public async deleteUser(request: deleteUserRequest): Promise<AxiosResponse<void>> {
+		let path = '/user/{username}';
+
+		path = path.replace('{username}', request.username.toString());
+
+		return Axios.request<void>({
+			...this.config,
+
+			method: 'DELETE',
 
 			url: \`\${this.baseUrl}\${path}\`,
 
